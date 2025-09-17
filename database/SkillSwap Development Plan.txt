@@ -1,0 +1,102 @@
+# SkillSwap Development Plan
+
+## Core Features (Minimal Viable Demo)
+1. User auth (register/login)
+2. Profile creation with skills
+3. Browse/search skills by category/location
+4. Send/accept swap requests
+5. Write reviews/ratings
+6. Complex DB queries for demo
+
+## Database Layer (Step 1)
+**Tables:**
+- users (extends Django's User)
+- profiles (user details, location)
+- categories (skill categories)
+- skills (name, category_id)
+- user_skills (many-to-many: user_id, skill_id, can_teach)
+- swap_requests (from_user, to_user, skill_wanted, status)
+- reviews (from_user, to_user, rating, comment)
+
+**Key Queries to Demo:**
+- Find Python teachers in "Mumbai"
+- Average rating per user
+- Most popular skills by category
+- Users with most skills
+
+**Files:**
+- schema.sql
+- sample_data.sql (5-10 users, skills, requests)
+
+## Django Backend (Step 2)
+**Models:** Match DB schema exactly
+**Views (JSON responses):**
+- auth/register, auth/login
+- profiles/me, profiles/update
+- skills/browse, skills/search
+- requests/send, requests/accept
+- reviews/create
+
+**URLs:** Simple routing
+**Settings:** MySQL connection, CORS for React
+
+## React Frontend (Step 3)
+**Components:**
+- Login/Register forms
+- ProfileEdit (skills selection)
+- SkillBrowser (search/filter)
+- RequestManager
+- ReviewForm
+
+**Pages:**
+- Home/Login
+- Dashboard
+- Browse Skills
+- My Requests
+- Profile
+
+**Styling:** Simple CSS, clean forms, basic responsive
+
+## Demo Script
+1. **DB Demo:** Show schema, run complex queries
+2. **Backend Demo:** Show models, views, API responses
+3. **Frontend Demo:** User flow - register → browse → request → review
+
+## Token Management
+- Keep files under 100 lines where possible
+- Focus on core functionality only
+- Clean, commented code
+- No unnecessary features or libraries
+
+## File Structure
+```
+skillswap/
+├── README.md
+├── database/
+│   ├── schema.sql
+│   ├── sample_data.sql
+│   └── demo_queries.sql
+├── backend/
+│   ├── manage.py
+│   ├── requirements.txt
+│   ├── skillswap_project/
+│   │   ├── settings.py
+│   │   └── urls.py
+│   └── skillswap_app/
+│       ├── models.py
+│       ├── views.py
+│       └── urls.py
+└── frontend/
+    ├── package.json
+    ├── public/index.html
+    └── src/
+        ├── App.js
+        ├── components/
+        └── styles/
+```
+
+## Development Order
+1. Create database schema + sample data
+2. Build Django models + basic views
+3. Create React components + integrate
+4. Test full stack + create README
