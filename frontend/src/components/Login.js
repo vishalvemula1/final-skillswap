@@ -27,7 +27,10 @@ function Login({ onLogin }) {
 
     try {
       const endpoint = isRegistering ? '/auth/register/' : '/auth/login/';
-      const response = await fetch(`${API_URL}${endpoint}`, {
+      const fullURL = `${API_URL}${endpoint}`;
+      console.log('Login attempt to:', fullURL);
+      
+      const response = await fetch(fullURL, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -36,7 +39,9 @@ function Login({ onLogin }) {
         credentials: 'include'
       });
 
+      console.log('Response status:', response.status);
       const data = await response.json();
+      console.log('Response data:', data);
 
       if (response.ok) {
         if (isRegistering) {
