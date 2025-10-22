@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { API_URL } from '../config/api';
 
 function MyRequests({ user }) {
   const [activeTab, setActiveTab] = useState('received');
@@ -15,7 +16,7 @@ function MyRequests({ user }) {
   const loadRequests = async () => {
     setLoading(true);
     try {
-      const response = await fetch('/api/requests/', {
+      const response = await fetch(`${API_URL}/requests/`, {
         credentials: 'include'
       });
       const data = await response.json();
@@ -33,7 +34,7 @@ function MyRequests({ user }) {
 
   const updateRequestStatus = async (requestId, status) => {
     try {
-      const response = await fetch(`/api/requests/${requestId}/update/`, {
+      const response = await fetch(`${API_URL}/requests/${requestId}/update/`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

@@ -1,5 +1,6 @@
 // frontend/src/components/Dashboard.js
 import React, { useState, useEffect } from 'react';
+import { API_URL } from '../config/api';
 
 function Dashboard({ user, setCurrentPage }) {
   const [stats, setStats] = useState({
@@ -19,13 +20,13 @@ function Dashboard({ user, setCurrentPage }) {
   const loadDashboardData = async () => {
     try {
       // Get user profile with skills
-      const profileResponse = await fetch('/api/profile/', {
+      const profileResponse = await fetch(`${API_URL}/profile/`, {
         credentials: 'include'
       });
       const profileData = await profileResponse.json();
 
       // Get swap requests
-      const requestsResponse = await fetch('/api/requests/', {
+      const requestsResponse = await fetch(`${API_URL}/requests/`, {
         credentials: 'include'
       });
       const requestsData = await requestsResponse.json();

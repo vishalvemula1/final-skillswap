@@ -1,5 +1,6 @@
 // frontend/src/components/Profile.js
 import React, { useState, useEffect } from 'react';
+import { API_URL } from '../config/api';
 
 function Profile({ user, setUser }) {
   const [profile, setProfile] = useState({
@@ -30,7 +31,7 @@ function Profile({ user, setUser }) {
 
   const loadProfile = async () => {
     try {
-      const response = await fetch('/api/profile/', {
+      const response = await fetch(`${API_URL}/profile/`, {
         credentials: 'include'
       });
       if (response.ok) {
@@ -46,7 +47,7 @@ function Profile({ user, setUser }) {
 
   const loadSkills = async () => {
     try {
-      const response = await fetch('/api/skills/', {
+      const response = await fetch(`${API_URL}/skills/`, {
         credentials: 'include'
       });
       const data = await response.json();
@@ -58,7 +59,7 @@ function Profile({ user, setUser }) {
 
   const loadCategories = async () => {
     try {
-      const response = await fetch('/api/categories/', {
+      const response = await fetch(`${API_URL}/categories/`, {
         credentials: 'include'
       });
       const data = await response.json();
@@ -74,7 +75,7 @@ function Profile({ user, setUser }) {
     setMessage('');
 
     try {
-      const response = await fetch('/api/profile/update/', {
+      const response = await fetch(`${API_URL}/profile/update/`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -108,7 +109,7 @@ function Profile({ user, setUser }) {
     }
 
     try {
-      const response = await fetch('/api/profile/add-skill/', {
+      const response = await fetch(`${API_URL}/profile/add-skill/`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

@@ -1,6 +1,7 @@
 // frontend/src/components/BrowseSkills.js
 // frontend/src/components/BrowseSkills.js
 import React, { useState, useEffect } from 'react';
+import { API_URL } from '../config/api';
 
 function BrowseSkills({ user }) {
   const [skills, setSkills] = useState([]);
@@ -26,7 +27,7 @@ function BrowseSkills({ user }) {
 
   const loadCategories = async () => {
     try {
-      const response = await fetch('/api/categories/', {
+      const response = await fetch(`${API_URL}/categories/`, {
         credentials: 'include'
       });
       const data = await response.json();
@@ -44,7 +45,7 @@ function BrowseSkills({ user }) {
       if (filters.location) params.append('location', filters.location);
       if (filters.category_id) params.append('category_id', filters.category_id);
 
-      const response = await fetch(`/api/skills/browse/?${params}`, {
+      const response = await fetch(`${API_URL}/skills/browse/?${params}`, {
         credentials: 'include'
       });
       const data = await response.json();
@@ -74,7 +75,7 @@ function BrowseSkills({ user }) {
     if (!selectedTeacher) return;
 
     try {
-      const response = await fetch('/api/requests/send/', {
+      const response = await fetch(`${API_URL}/requests/send/`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

@@ -1,6 +1,7 @@
 // frontend/src/App.js
 import React, { useState, useEffect } from 'react';
 import './App.css';
+import { API_URL } from './config/api';
 
 // Import components
 import Login from './components/Login';
@@ -21,7 +22,7 @@ function App() {
 
   const checkAuthStatus = async () => {
     try {
-      const response = await fetch('/api/profile/', {
+      const response = await fetch(`${API_URL}/profile/`, {
         credentials: 'include'
       });
       if (response.ok) {
@@ -42,7 +43,7 @@ function App() {
 
   const handleLogout = async () => {
     try {
-      await fetch('/api/auth/logout/', {
+      await fetch(`${API_URL}/auth/logout/`, {
         method: 'POST',
         credentials: 'include'
       });

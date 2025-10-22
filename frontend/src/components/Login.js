@@ -1,5 +1,6 @@
 // frontend/src/components/Login.js
 import React, { useState } from 'react';
+import { apiCall, API_URL } from '../config/api';
 
 function Login({ onLogin }) {
   const [isRegistering, setIsRegistering] = useState(false);
@@ -25,8 +26,8 @@ function Login({ onLogin }) {
     setError('');
 
     try {
-      const endpoint = isRegistering ? '/api/auth/register/' : '/api/auth/login/';
-      const response = await fetch(endpoint, {
+      const endpoint = isRegistering ? '/auth/register/' : '/auth/login/';
+      const response = await fetch(`${API_URL}${endpoint}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -49,6 +50,7 @@ function Login({ onLogin }) {
         setError(data.error || 'Something went wrong');
       }
     } catch (error) {
+      console.error('Login error:', error);
       setError('Network error. Please try again.');
     } finally {
       setLoading(false);
