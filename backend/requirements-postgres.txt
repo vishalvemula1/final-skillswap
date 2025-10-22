@@ -1,0 +1,23 @@
+# Alternative requirements.txt for PostgreSQL deployment (Render)
+# Use this if deploying to Render.com which uses PostgreSQL
+
+# Core Django
+Django==4.2.7
+django-cors-headers==4.3.1
+
+# Database - PostgreSQL instead of MySQL
+psycopg2-binary==2.9.9
+dj-database-url==2.1.0
+
+# Environment Variables
+python-dotenv==1.0.0
+
+# Static Files (for production)
+whitenoise==6.6.0
+
+# WSGI Server for production
+gunicorn==21.2.0
+
+# Note: If using PostgreSQL, you'll need to:
+# 1. Update your database schema for PostgreSQL compatibility
+# 2. Change DATABASES engine in settings.py or use DATABASE_URL from Render
