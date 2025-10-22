@@ -26,12 +26,14 @@ services:
         sync: false
 
   # Frontend React App
-  - type: static
+  - type: web
     name: skillswap-frontend
+    env: node
+    plan: free
     branch: main
     rootDir: frontend
     buildCommand: "npm install && npm run build"
-    staticPublishPath: ./build
+    startCommand: "npm run serve"
     envVars:
       - key: REACT_APP_API_URL
         value: https://skillswap-backend.onrender.com/api
