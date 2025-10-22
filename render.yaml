@@ -29,7 +29,6 @@ services:
   - type: web
     name: skillswap-frontend
     env: static
-    region: oregon
     plan: free
     branch: main
     rootDir: frontend
