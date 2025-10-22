@@ -123,3 +123,10 @@ dmypy.json
 
 # Cython debug symbols
 cython_debug/
+
+#md files
+DATABASE_STATUS.md
+DEPLOYMENT_GUIDE.md
+LOGIN_FIX_SUMMARY.md
+TEST_RESULTS.md
+
