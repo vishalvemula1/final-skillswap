@@ -33,7 +33,7 @@ services:
     plan: free
     branch: main
     rootDir: frontend
-    buildCommand: "npm ci && NODE_OPTIONS=--openssl-legacy-provider npm run build"
+    buildCommand: "npm install && NODE_OPTIONS=--openssl-legacy-provider npm run build"
     startCommand: "node_modules/.bin/serve -s build -p $PORT"
     envVars:
       - key: NODE_VERSION
