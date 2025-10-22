@@ -7,8 +7,8 @@ services:
     plan: free
     branch: main
     rootDir: backend
-    buildCommand: "./build.sh"
-    startCommand: "gunicorn skillswap_project.wsgi:application"
+    buildCommand: "pip install -r requirements.txt && python manage.py collectstatic --no-input && python manage.py migrate"
+    startCommand: "gunicorn skillswap_project.wsgi:application --bind 0.0.0.0:$PORT"
     envVars:
       - key: PYTHON_VERSION
         value: 3.11.0
@@ -21,22 +21,25 @@ services:
           name: skillswap-db
           property: connectionString
       - key: ALLOWED_HOSTS
-        sync: false
+        value: "skillswap-backend.onrender.com"
       - key: CORS_ALLOWED_ORIGINS
-        sync: false
+        value: "https://skillswap-frontend.onrender.com"
 
   # Frontend React App
   - type: web
     name: skillswap-frontend
     env: node
+    region: oregon
     plan: free
     branch: main
     rootDir: frontend
     buildCommand: "npm install && npm run build"
-    startCommand: "npm run serve"
+    startCommand: "npx serve -s build -l 3000"
     envVars:
+      - key: NODE_VERSION
+        value: 18.17.0
       - key: REACT_APP_API_URL
-        value: https://skillswap-backend.onrender.com/api
+        value: "https://skillswap-backend.onrender.com/api"
 
 # Database
 databases:
