@@ -33,8 +33,8 @@ services:
     plan: free
     branch: main
     rootDir: frontend
-    buildCommand: "npm install && NODE_OPTIONS=--openssl-legacy-provider npm run build"
-    startCommand: "npx serve -s build -l 3000"
+    buildCommand: "npm ci && NODE_OPTIONS=--openssl-legacy-provider npm run build"
+    startCommand: "node_modules/.bin/serve -s build -p $PORT"
     envVars:
       - key: NODE_VERSION
         value: 18.17.0
