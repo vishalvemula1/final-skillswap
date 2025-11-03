@@ -137,6 +137,15 @@ CORS_ALLOWED_ORIGINS = [origin.strip() for origin in CORS_ORIGINS_STRING.split('
 CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOW_ALL_ORIGINS = False
 
+# CSRF Trusted Origins - Required for Django 4.x cross-origin POST requests
+# Must include the frontend domain for cookies to work properly
+CSRF_TRUSTED_ORIGINS = [
+    'http://localhost:3000',
+    'http://127.0.0.1:3000',
+    'https://skillswap-frontend.onrender.com',
+    'https://skillswap-backend-429j.onrender.com',  # Backend itself
+]
+
 # Headers to allow
 CORS_ALLOW_HEADERS = [
     'accept',
@@ -150,6 +159,31 @@ CORS_ALLOW_HEADERS = [
     'x-requested-with',
 ]
 
+# HTTP methods to allow for CORS
+CORS_ALLOW_METHODS = [
+    'DELETE',
+    'GET',
+    'OPTIONS',
+    'PATCH',
+    'POST',
+    'PUT',
+]
+
 # Session settings
 SESSION_COOKIE_AGE = 86400  # 24 hours
 SESSION_SAVE_EVERY_REQUEST = True
+
+# Session cookie settings for cross-origin requests (frontend on different domain)
+# These are CRITICAL for Render deployment where frontend and backend are on different subdomains
+if not DEBUG:
+    # Production settings (Render)
+    SESSION_COOKIE_SAMESITE = 'None'  # Allow cross-site cookies
+    SESSION_COOKIE_SECURE = True      # Required when SameSite=None (HTTPS only)
+    SESSION_COOKIE_HTTPONLY = True    # Prevent JavaScript access
+    CSRF_COOKIE_SAMESITE = 'None'
+    CSRF_COOKIE_SECURE = True
+else:
+    # Development settings (localhost)
+    SESSION_COOKIE_SAMESITE = 'Lax'
+    SESSION_COOKIE_SECURE = False
+    SESSION_COOKIE_HTTPONLY = True
