@@ -6,8 +6,39 @@ class Command(BaseCommand):
     help = 'Populate database with demo data for faculty presentation'
 
     def handle(self, *args, **options):
-        self.stdout.write('Creating demo users...')
-        
+        self.stdout.write('=' * 70)
+        self.stdout.write(self.style.SUCCESS('🚀 Populating database with demo data...'))
+        self.stdout.write('=' * 70)
+
+        # First create admin and simple demo users
+        self.stdout.write('\n📝 Creating admin and basic demo users...')
+        if not User.objects.filter(username='admin').exists():
+            admin = User.objects.create_superuser(
+                username='admin', email='admin@skillswap.com', password='admin'
+            )
+            Profile.objects.get_or_create(user=admin, defaults={
+                'bio': 'System Administrator', 'location': 'System'
+            })
+            self.stdout.write(self.style.SUCCESS('✅ Created admin/admin'))
+        else:
+            self.stdout.write(self.style.WARNING('⏭️  admin already exists'))
+
+        for username in ['user1', 'user2']:
+            if not User.objects.filter(username=username).exists():
+                user = User.objects.create_user(
+                    username=username,
+                    email=f'{username}@example.com',
+                    password='password'
+                )
+                Profile.objects.get_or_create(user=user, defaults={
+                    'bio': f'Demo user {username}', 'location': 'Demo'
+                })
+                self.stdout.write(self.style.SUCCESS(f'✅ Created {username}/password'))
+            else:
+                self.stdout.write(self.style.WARNING(f'⏭️  {username} already exists'))
+
+        self.stdout.write('\n📝 Creating demo users with skills...')
+
         # Demo users with realistic profiles
         demo_users = [
             {
@@ -124,12 +155,29 @@ class Command(BaseCommand):
             self.assign_skills_to_users(created_users)
             self.create_sample_requests(created_users)
 
-        self.stdout.write(
-            self.style.SUCCESS('Demo data populated successfully!')
-        )
-        self.stdout.write('Demo login credentials:')
+        # Final summary
+        total_users = User.objects.count()
+        total_skills = Skill.objects.count()
+        total_categories = Category.objects.count()
+        total_user_skills = UserSkill.objects.count()
+
+        self.stdout.write('\n' + '=' * 70)
+        self.stdout.write(self.style.SUCCESS('✅ Demo data populated successfully!'))
+        self.stdout.write('=' * 70)
+        self.stdout.write(f'\n📊 Database Summary:')
+        self.stdout.write(f'   - Total Users: {total_users}')
+        self.stdout.write(f'   - Total Skills: {total_skills}')
+        self.stdout.write(f'   - Total Categories: {total_categories}')
+        self.stdout.write(f'   - User-Skill Assignments: {total_user_skills}')
+        self.stdout.write('\n📝 Login Credentials:')
+        self.stdout.write('   SIMPLE USERS:')
+        self.stdout.write('   - admin / admin (superuser)')
+        self.stdout.write('   - user1 / password')
+        self.stdout.write('   - user2 / password')
+        self.stdout.write('\n   DEMO USERS WITH SKILLS:')
         for user_data in demo_users:
-            self.stdout.write(f'  {user_data["username"]} / demo123')
+            self.stdout.write(f'   - {user_data["username"]} / demo123')
+        self.stdout.write('=' * 70)
 
     def assign_skills_to_users(self, users):
         """Assign skills to demo users"""
