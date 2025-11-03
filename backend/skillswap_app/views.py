@@ -5,9 +5,22 @@ from django.contrib.auth.models import User
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_http_methods
 from django.db.models import Q, Avg, Count
+from django.conf import settings
 import json
 
 from .models import Profile, Category, Skill, UserSkill, SwapRequest, Review
+
+@require_http_methods(["GET"])
+def health_check(request):
+    """Health check endpoint for debugging"""
+    return JsonResponse({
+        'status': 'healthy',
+        'debug_mode': settings.DEBUG,
+        'session_cookie_samesite': getattr(settings, 'SESSION_COOKIE_SAMESITE', 'Not set'),
+        'session_cookie_secure': getattr(settings, 'SESSION_COOKIE_SECURE', 'Not set'),
+        'cors_allowed_origins': settings.CORS_ALLOWED_ORIGINS,
+        'csrf_trusted_origins': getattr(settings, 'CSRF_TRUSTED_ORIGINS', []),
+    })
 
 @csrf_exempt
 @require_http_methods(["POST"])

@@ -12,6 +12,14 @@ function Login({ onLogin }) {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
+  // Log API configuration on component mount
+  React.useEffect(() => {
+    console.log('🔧 Login component mounted');
+    console.log('🌐 API_URL configured as:', API_URL);
+    console.log('🌍 Current origin:', window.location.origin);
+    console.log('📍 Environment:', process.env.NODE_ENV);
+  }, []);
+
   const handleInputChange = (e) => {
     setFormData({
       ...formData,
@@ -21,6 +29,7 @@ function Login({ onLogin }) {
   };
 
   const handleSubmit = async (e) => {
+    console.log('🎯 Form submit triggered');
     e.preventDefault();
     setLoading(true);
     setError('');
@@ -28,8 +37,10 @@ function Login({ onLogin }) {
     try {
       const endpoint = isRegistering ? '/auth/register/' : '/auth/login/';
       const fullURL = `${API_URL}${endpoint}`;
-      console.log('Login attempt to:', fullURL);
-      
+      console.log('🌐 API_URL:', API_URL);
+      console.log('📡 Full URL:', fullURL);
+      console.log('📦 Sending data:', { username: formData.username, email: formData.email, password: '***' });
+
       const response = await fetch(fullURL, {
         method: 'POST',
         headers: {
@@ -39,26 +50,33 @@ function Login({ onLogin }) {
         credentials: 'include'
       });
 
-      console.log('Response status:', response.status);
+      console.log('✅ Response received - Status:', response.status);
+      console.log('📋 Response headers:', [...response.headers.entries()]);
+
       const data = await response.json();
-      console.log('Response data:', data);
+      console.log('📄 Response data:', data);
 
       if (response.ok) {
+        console.log('✅ Login successful!');
         if (isRegistering) {
           setIsRegistering(false);
           setError('Registration successful! Please log in.');
           setFormData({ username: formData.username, email: '', password: '' });
         } else {
+          console.log('🔐 Calling onLogin with user data:', data.user);
           onLogin(data.user);
         }
       } else {
+        console.error('❌ Login failed:', data.error);
         setError(data.error || 'Something went wrong');
       }
     } catch (error) {
-      console.error('Login error:', error);
-      setError('Network error. Please try again.');
+      console.error('❌ Network/Fetch error:', error);
+      console.error('Error details:', error.message, error.stack);
+      setError(`Network error: ${error.message}. Please check if backend is running.`);
     } finally {
       setLoading(false);
+      console.log('🏁 Login attempt completed');
     }
   };
 
@@ -133,6 +151,7 @@ function Login({ onLogin }) {
         {/* Demo credentials hint */}
         <div className="demo-hint">
           <p><small>Demo users: admin/admin, user1/password, user2/password</small></p>
+          <p><small style={{color: '#666', marginTop: '5px'}}>API: {API_URL}</small></p>
         </div>
       </div>
     </div>
