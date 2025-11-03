@@ -7,7 +7,7 @@ services:
     plan: free
     branch: main
     rootDir: backend
-    buildCommand: "pip install -r requirements.txt && python manage.py collectstatic --no-input && python manage.py migrate && python create_admin.py"
+    buildCommand: "pip install -r requirements.txt && python manage.py collectstatic --no-input && python manage.py migrate && python manage.py create_demo_users"
     startCommand: "gunicorn skillswap_project.wsgi:application --bind 0.0.0.0:$PORT"
     envVars:
       - key: PYTHON_VERSION
