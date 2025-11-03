@@ -311,35 +311,6 @@ The `demo_queries.sql` file contains 8 complex queries that demonstrate:
 - `POST /api/requests/send/` - Send skill request
 - `POST /api/requests/{id}/update/` - Update request status
 
-## 💡 Faculty Presentation Points
 
-### DBMS Faculty
-- Showcase complex schema design
-- Demonstrate query optimization with indexes
-- Show data integrity with foreign key constraints
-- Present real-world data analysis queries
-
-### Backend Faculty
-- Explain Django MVC architecture
-- Show API design and JSON responses
-- Demonstrate ORM usage and raw SQL integration
-- Present authentication and session management
-
-### Frontend Faculty
-- Show modern React patterns (hooks, functional components)
-- Demonstrate responsive design principles
-- Present component reusability and state management
-- Show API integration and error handling
-
-## 🚀 Future Enhancements
-
-- Real-time messaging system
-- Advanced matching algorithm
-- Mobile responsive optimizations
-- Email notifications
-- File upload for skill demonstrations
-- Advanced search with filters
-
----
 
 **Note**: This is a demo application. For production use, additional security measures, error handling, and optimization would be required.
