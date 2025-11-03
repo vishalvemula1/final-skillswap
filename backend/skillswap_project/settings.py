@@ -134,7 +134,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # CORS settings for React frontend
 # Parse from environment variable (comma-separated) or use defaults
-CORS_ORIGINS_STRING = os.environ.get('CORS_ALLOWED_ORIGINS', 'http://localhost:3000,http://127.0.0.1:3000,https://skillswap-frontend.onrender.com')
+CORS_ORIGINS_STRING = os.environ.get('CORS_ALLOWED_ORIGINS', 'http://localhost:3000,http://127.0.0.1:3000,https://skillswap-frontend-31tg.onrender.com')
 CORS_ALLOWED_ORIGINS = [origin.strip() for origin in CORS_ORIGINS_STRING.split(',')]
 
 CORS_ALLOW_CREDENTIALS = True
@@ -145,8 +145,8 @@ CORS_ALLOW_ALL_ORIGINS = False
 CSRF_TRUSTED_ORIGINS = [
     'http://localhost:3000',
     'http://127.0.0.1:3000',
-    'https://skillswap-frontend.onrender.com',
-    'https://skillswap-backend-429j.onrender.com',  # Backend itself
+    'https://skillswap-frontend-31tg.onrender.com',
+    'https://skillswap-backend-8k91.onrender.com',  # Backend itself
 ]
 
 # Headers to allow
