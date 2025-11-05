@@ -35,6 +35,8 @@ function Login() {
       const endpoint = isRegistering ? '/auth/register/' : '/auth/login/';
       const fullURL = `${API_URL}${endpoint}`;
 
+      console.log('Attempting login to:', fullURL);
+
       const response = await fetch(fullURL, {
         method: 'POST',
         headers: {
@@ -45,25 +47,31 @@ function Login() {
       });
 
       const data = await response.json();
+      console.log('Login response:', response.ok, data);
 
       if (response.ok) {
         if (isRegistering) {
           setIsRegistering(false);
           toast.success('Registration successful! Please log in.');
           setFormData({ username: formData.username, email: '', password: '' });
+          setLoading(false);
         } else {
+          // Successful login
+          console.log('Login successful, setting user:', data.user);
           toast.success(`Welcome back, ${data.user.username}!`);
           login(data.user);
+          // Don't set loading to false here - let the app redirect
         }
       } else {
         setError(data.error || 'Something went wrong');
         toast.error(data.error || 'Authentication failed');
+        setLoading(false);
       }
     } catch (error) {
+      console.error('Login error:', error);
       const errorMsg = `Network error: Failed to connect. Please check if backend is running.`;
       setError(errorMsg);
       toast.error('Connection failed');
-    } finally {
       setLoading(false);
     }
   };

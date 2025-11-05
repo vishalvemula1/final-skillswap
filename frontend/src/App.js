@@ -49,7 +49,21 @@ const PageTransition = ({ children }) => {
 };
 
 const AppContent = () => {
-  const { user } = useAuth();
+  const { user, loading } = useAuth();
+
+  console.log('AppContent render - user:', user ? 'exists' : 'null', 'loading:', loading);
+
+  // Show loading state while checking auth
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-neutral-50 dark:bg-neutral-900">
+        <div className="text-center space-y-4">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-brand-500 mx-auto"></div>
+          <p className="text-neutral-600 dark:text-neutral-400">Loading...</p>
+        </div>
+      </div>
+    );
+  }
 
   if (!user) {
     return <Login />;
