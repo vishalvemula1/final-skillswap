@@ -1,8 +1,10 @@
 // frontend/src/components/Profile.js
 import React, { useState, useEffect } from 'react';
 import { API_URL } from '../config/api';
+import { useAuth } from '../context/AuthContext';
 
-function Profile({ user, setUser }) {
+function Profile() {
+  const { user, updateUser } = useAuth();
   const [profile, setProfile] = useState({
     username: '',
     email: '',
@@ -90,7 +92,7 @@ function Profile({ user, setUser }) {
 
       if (response.ok) {
         setMessage('Profile updated successfully!');
-        setUser({ ...user, location: profile.location, bio: profile.bio });
+        updateUser({ ...user, location: profile.location, bio: profile.bio });
       } else {
         const data = await response.json();
         setMessage('Error: ' + (data.error || 'Failed to update profile'));

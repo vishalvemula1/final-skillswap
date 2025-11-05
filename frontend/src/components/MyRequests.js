@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { API_URL } from '../config/api';
+import { useAuth } from '../context/AuthContext';
 
-function MyRequests({ user }) {
+function MyRequests() {
+  const { user } = useAuth();
   const [activeTab, setActiveTab] = useState('received');
   const [requests, setRequests] = useState({
     sent_requests: [],

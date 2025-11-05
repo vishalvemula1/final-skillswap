@@ -159,26 +159,35 @@ def get_skills(request):
 @require_http_methods(["GET"])
 def browse_skills(request):
     """Browse skills with teachers and filters"""
+    from django.db.models import Subquery, OuterRef
+
     location = request.GET.get('location', '')
     category_id = request.GET.get('category_id')
     search = request.GET.get('search', '')
-    
-    # Get skills with teacher information
+
+    # Pre-calculate average ratings for all users in a single query
+    user_ratings = Review.objects.filter(to_user=OuterRef('user')).values('to_user').annotate(
+        avg=Avg('rating')
+    ).values('avg')
+
+    # Get skills with teacher information - optimized with prefetch
     skills_query = UserSkill.objects.filter(can_teach=True).select_related(
         'skill__category', 'user__profile'
+    ).annotate(
+        teacher_avg_rating=Subquery(user_ratings)
     )
-    
+
     if location:
         skills_query = skills_query.filter(user__profile__location__icontains=location)
-    
+
     if category_id:
         skills_query = skills_query.filter(skill__category_id=category_id)
-    
+
     if search:
         skills_query = skills_query.filter(
             Q(skill__name__icontains=search) | Q(skill__description__icontains=search)
         )
-    
+
     # Group by skill and collect teachers
     skills_dict = {}
     for user_skill in skills_query:
@@ -191,12 +200,10 @@ def browse_skills(request):
                 'description': user_skill.skill.description,
                 'teachers': []
             }
-        
-        # Get teacher's average rating
-        avg_rating = Review.objects.filter(to_user=user_skill.user).aggregate(
-            avg_rating=Avg('rating')
-        )['avg_rating'] or 0
-        
+
+        # Use pre-calculated rating from annotation
+        avg_rating = user_skill.teacher_avg_rating or 0
+
         skills_dict[skill_id]['teachers'].append({
             'id': user_skill.user.id,
             'username': user_skill.user.username,
@@ -204,7 +211,7 @@ def browse_skills(request):
             'experience_level': user_skill.experience_level,
             'avg_rating': round(avg_rating, 1)
         })
-    
+
     return JsonResponse({'skills': list(skills_dict.values())})
 
 @csrf_exempt
