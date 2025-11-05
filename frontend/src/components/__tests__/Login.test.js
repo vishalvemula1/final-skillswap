@@ -4,7 +4,6 @@
  */
 import React from 'react';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
-import { BrowserRouter } from 'react-router-dom';
 import Login from '../Login';
 import { AuthProvider } from '../../context/AuthContext';
 import { ToastProvider } from '../ui';
@@ -14,13 +13,11 @@ global.fetch = jest.fn();
 
 const renderLogin = () => {
   return render(
-    <BrowserRouter>
-      <ToastProvider>
-        <AuthProvider>
-          <Login />
-        </AuthProvider>
-      </ToastProvider>
-    </BrowserRouter>
+    <ToastProvider>
+      <AuthProvider>
+        <Login />
+      </AuthProvider>
+    </ToastProvider>
   );
 };
 
