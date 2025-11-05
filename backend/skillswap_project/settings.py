@@ -190,3 +190,13 @@ else:
     SESSION_COOKIE_SAMESITE = 'Lax'
     SESSION_COOKIE_SECURE = False
     SESSION_COOKIE_HTTPONLY = True
+
+# Test database configuration - Use SQLite for faster tests
+import sys
+if 'test' in sys.argv:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': ':memory:',
+        }
+    }
