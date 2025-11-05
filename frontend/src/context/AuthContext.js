@@ -22,7 +22,10 @@ export const AuthProvider = ({ children }) => {
       });
       if (response.ok) {
         const userData = await response.json();
-        setUser(userData);
+        // Validate that we have at least a username before setting user
+        if (userData && userData.username) {
+          setUser(userData);
+        }
       }
     } catch (error) {
       console.log('Not logged in');

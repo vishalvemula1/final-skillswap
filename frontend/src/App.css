@@ -64,10 +64,21 @@
 
 body {
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica Neue', sans-serif;
-  background: linear-gradient(180deg, var(--gray-50) 0%, var(--gray-100) 100%);
-  color: var(--gray-800);
   line-height: 1.6;
   min-height: 100vh;
+}
+
+/* Light mode (default) */
+body:not(.dark) {
+  background: linear-gradient(180deg, var(--gray-50) 0%, var(--gray-100) 100%);
+  color: var(--gray-800);
+}
+
+/* Dark mode */
+.dark body,
+body.dark {
+  background: linear-gradient(180deg, var(--gray-900) 0%, var(--gray-950) 100%);
+  color: var(--gray-100);
 }
 
 /* ===================================
@@ -75,7 +86,6 @@ body {
    =================================== */
 
 .navbar {
-  background: rgba(255, 255, 255, 0.9);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
@@ -86,7 +96,17 @@ body {
   position: sticky;
   top: 0;
   z-index: 100;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+body:not(.dark) .navbar {
+  background: rgba(255, 255, 255, 0.9);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.dark .navbar,
+body.dark .navbar {
+  background: rgba(23, 23, 23, 0.9);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .nav-brand h2 {
@@ -302,11 +322,22 @@ body {
 .form-group input {
   width: 100%;
   padding: 0.875rem 1rem;
-  border: 2px solid var(--gray-200);
   border-radius: var(--radius-md);
   font-size: 1rem;
   transition: all var(--transition-base);
+}
+
+body:not(.dark) .form-group input {
+  border: 2px solid var(--gray-200);
   background: white;
+  color: var(--gray-900);
+}
+
+.dark .form-group input,
+body.dark .form-group input {
+  border: 2px solid var(--gray-700);
+  background: var(--gray-800);
+  color: var(--gray-100);
 }
 
 .form-group input:focus {
@@ -415,15 +446,24 @@ body {
 }
 
 .stat-card {
-  background: white;
   padding: 2rem 1.5rem;
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-md);
   text-align: center;
   transition: all var(--transition-base);
-  border: 1px solid var(--gray-100);
   position: relative;
   overflow: hidden;
+}
+
+body:not(.dark) .stat-card {
+  background: white;
+  border: 1px solid var(--gray-100);
+}
+
+.dark .stat-card,
+body.dark .stat-card {
+  background: var(--gray-800);
+  border: 1px solid var(--gray-700);
 }
 
 .stat-card::before {
@@ -465,12 +505,21 @@ body {
 }
 
 .dashboard-section {
-  background: white;
   padding: 2rem;
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-md);
   margin-bottom: 2rem;
+}
+
+body:not(.dark) .dashboard-section {
+  background: white;
   border: 1px solid var(--gray-100);
+}
+
+.dark .dashboard-section,
+body.dark .dashboard-section {
+  background: var(--gray-800);
+  border: 1px solid var(--gray-700);
 }
 
 .dashboard-section h2 {
@@ -488,9 +537,17 @@ body {
 
 .action-card {
   padding: 1.5rem;
-  border: 2px solid var(--gray-100);
   border-radius: var(--radius-lg);
   transition: all var(--transition-base);
+}
+
+body:not(.dark) .action-card {
+  border: 2px solid var(--gray-100);
+}
+
+.dark .action-card,
+body.dark .action-card {
+  border: 2px solid var(--gray-700);
 }
 
 .action-card:hover {
@@ -557,11 +614,25 @@ body {
 .filters input,
 .filters select {
   padding: 0.75rem 1rem;
-  border: 2px solid var(--gray-200);
   border-radius: var(--radius-md);
   font-size: 0.95rem;
   transition: all var(--transition-base);
+}
+
+body:not(.dark) .filters input,
+body:not(.dark) .filters select {
+  border: 2px solid var(--gray-200);
   background: white;
+  color: var(--gray-900);
+}
+
+.dark .filters input,
+.dark .filters select,
+body.dark .filters input,
+body.dark .filters select {
+  border: 2px solid var(--gray-700);
+  background: var(--gray-800);
+  color: var(--gray-100);
 }
 
 .filters input:focus,
@@ -595,14 +666,23 @@ body {
 }
 
 .skill-card {
-  background: white;
   padding: 1.75rem;
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-md);
   transition: all var(--transition-base);
-  border: 1px solid var(--gray-100);
   position: relative;
   overflow: hidden;
+}
+
+body:not(.dark) .skill-card {
+  background: white;
+  border: 1px solid var(--gray-100);
+}
+
+.dark .skill-card,
+body.dark .skill-card {
+  background: var(--gray-800);
+  border: 1px solid var(--gray-700);
 }
 
 .skill-card::before {
@@ -668,13 +748,26 @@ body {
   justify-content: space-between;
   align-items: center;
   padding: 0.875rem;
-  background: var(--gray-50);
   border-radius: var(--radius-md);
   transition: all var(--transition-base);
 }
 
-.teacher-item:hover {
+body:not(.dark) .teacher-item {
+  background: var(--gray-50);
+}
+
+body:not(.dark) .teacher-item:hover {
   background: var(--gray-100);
+}
+
+.dark .teacher-item,
+body.dark .teacher-item {
+  background: var(--gray-700);
+}
+
+.dark .teacher-item:hover,
+body.dark .teacher-item:hover {
+  background: var(--gray-600);
 }
 
 .teacher-info {
@@ -755,12 +848,21 @@ body {
 }
 
 .request-card {
-  background: white;
   padding: 1.75rem;
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-md);
-  border: 1px solid var(--gray-100);
   transition: all var(--transition-base);
+}
+
+body:not(.dark) .request-card {
+  background: white;
+  border: 1px solid var(--gray-100);
+}
+
+.dark .request-card,
+body.dark .request-card {
+  background: var(--gray-800);
+  border: 1px solid var(--gray-700);
 }
 
 .request-card:hover {
@@ -847,12 +949,21 @@ body {
    =================================== */
 
 .profile-section {
-  background: white;
   padding: 2rem;
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-md);
   margin-bottom: 2rem;
+}
+
+body:not(.dark) .profile-section {
+  background: white;
   border: 1px solid var(--gray-100);
+}
+
+.dark .profile-section,
+body.dark .profile-section {
+  background: var(--gray-800);
+  border: 1px solid var(--gray-700);
 }
 
 .profile-section h2 {
@@ -882,11 +993,26 @@ body {
 .profile-form input,
 .profile-form textarea {
   padding: 0.875rem 1rem;
-  border: 2px solid var(--gray-200);
   border-radius: var(--radius-md);
   font-size: 1rem;
   transition: all var(--transition-base);
   font-family: inherit;
+}
+
+body:not(.dark) .profile-form input,
+body:not(.dark) .profile-form textarea {
+  border: 2px solid var(--gray-200);
+  background: white;
+  color: var(--gray-900);
+}
+
+.dark .profile-form input,
+.dark .profile-form textarea,
+body.dark .profile-form input,
+body.dark .profile-form textarea {
+  border: 2px solid var(--gray-700);
+  background: var(--gray-800);
+  color: var(--gray-100);
 }
 
 .profile-form input:focus,

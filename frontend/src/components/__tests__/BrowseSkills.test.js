@@ -4,7 +4,6 @@
  */
 import React from 'react';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
-import { BrowserRouter } from 'react-router-dom';
 import BrowseSkills from '../BrowseSkills';
 import { AuthProvider } from '../../context/AuthContext';
 
@@ -64,11 +63,7 @@ jest.mock('../../context/AuthContext', () => ({
 }));
 
 const renderBrowseSkills = () => {
-  return render(
-    <BrowserRouter>
-      <BrowseSkills />
-    </BrowserRouter>
-  );
+  return render(<BrowseSkills />);
 };
 
 describe('BrowseSkills Component', () => {
