@@ -1,9 +1,10 @@
 // frontend/src/components/BrowseSkills.js
-// frontend/src/components/BrowseSkills.js
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { API_URL } from '../config/api';
+import { useAuth } from '../context/AuthContext';
 
-function BrowseSkills({ user }) {
+function BrowseSkills() {
+  const { user } = useAuth();
   const [skills, setSkills] = useState([]);
   const [categories, setCategories] = useState([]);
   const [filters, setFilters] = useState({
@@ -18,11 +19,14 @@ function BrowseSkills({ user }) {
 
   useEffect(() => {
     loadCategories();
-    loadSkills();
   }, []);
 
   useEffect(() => {
-    loadSkills();
+    const timer = setTimeout(() => {
+      loadSkills();
+    }, 300); // Debounce search by 300ms
+
+    return () => clearTimeout(timer);
   }, [filters]);
 
   const loadCategories = async () => {
