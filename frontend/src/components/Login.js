@@ -1,8 +1,14 @@
-// frontend/src/components/Login.js
 import React, { useState } from 'react';
-import { apiCall, API_URL } from '../config/api';
+import { motion, AnimatePresence } from 'framer-motion';
+import { LogIn, UserPlus, AlertCircle, Sparkles } from 'lucide-react';
+import { API_URL } from '../config/api';
+import { useAuth } from '../context/AuthContext';
+import { useToast } from './ui';
+import { Button, Input, Card } from './ui';
 
-function Login({ onLogin }) {
+function Login() {
+  const { login } = useAuth();
+  const toast = useToast();
   const [isRegistering, setIsRegistering] = useState(false);
   const [formData, setFormData] = useState({
     username: '',
@@ -12,24 +18,15 @@ function Login({ onLogin }) {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
-  // Log API configuration on component mount
-  React.useEffect(() => {
-    console.log('🔧 Login component mounted');
-    console.log('🌐 API_URL configured as:', API_URL);
-    console.log('🌍 Current origin:', window.location.origin);
-    console.log('📍 Environment:', process.env.NODE_ENV);
-  }, []);
-
   const handleInputChange = (e) => {
     setFormData({
       ...formData,
       [e.target.name]: e.target.value
     });
-    setError(''); // Clear error when user types
+    setError('');
   };
 
   const handleSubmit = async (e) => {
-    console.log('🎯 Form submit triggered');
     e.preventDefault();
     setLoading(true);
     setError('');
@@ -37,9 +34,6 @@ function Login({ onLogin }) {
     try {
       const endpoint = isRegistering ? '/auth/register/' : '/auth/login/';
       const fullURL = `${API_URL}${endpoint}`;
-      console.log('🌐 API_URL:', API_URL);
-      console.log('📡 Full URL:', fullURL);
-      console.log('📦 Sending data:', { username: formData.username, email: formData.email, password: '***' });
 
       const response = await fetch(fullURL, {
         method: 'POST',
@@ -50,110 +44,227 @@ function Login({ onLogin }) {
         credentials: 'include'
       });
 
-      console.log('✅ Response received - Status:', response.status);
-      console.log('📋 Response headers:', [...response.headers.entries()]);
-
       const data = await response.json();
-      console.log('📄 Response data:', data);
 
       if (response.ok) {
-        console.log('✅ Login successful!');
         if (isRegistering) {
           setIsRegistering(false);
-          setError('Registration successful! Please log in.');
+          toast.success('Registration successful! Please log in.');
           setFormData({ username: formData.username, email: '', password: '' });
         } else {
-          console.log('🔐 Calling onLogin with user data:', data.user);
-          onLogin(data.user);
+          toast.success(`Welcome back, ${data.user.username}!`);
+          login(data.user);
         }
       } else {
-        console.error('❌ Login failed:', data.error);
         setError(data.error || 'Something went wrong');
+        toast.error(data.error || 'Authentication failed');
       }
     } catch (error) {
-      console.error('❌ Network/Fetch error:', error);
-      console.error('Error details:', error.message, error.stack);
-      setError(`Network error: ${error.message}. Please check if backend is running.`);
+      const errorMsg = `Network error: Failed to connect. Please check if backend is running.`;
+      setError(errorMsg);
+      toast.error('Connection failed');
     } finally {
       setLoading(false);
-      console.log('🏁 Login attempt completed');
     }
   };
 
+  const fillDemoCredentials = (username, password) => {
+    setFormData({ username, email: '', password });
+    setError('');
+  };
+
   return (
-    <div className="login-container">
-      <div className="login-card">
-        <h1>SkillSwap</h1>
-        <p className="tagline">Exchange skills, grow together</p>
-        
-        <form onSubmit={handleSubmit} className="login-form">
-          <h2>{isRegistering ? 'Create Account' : 'Sign In'}</h2>
-          
-          {error && <div className="error-message">{error}</div>}
-          
-          <div className="form-group">
-            <input
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-brand-500 via-purple-500 to-accent-500 p-4">
+      {/* Animated background elements */}
+      <div className="absolute inset-0 overflow-hidden">
+        <motion.div
+          animate={{
+            scale: [1, 1.2, 1],
+            rotate: [0, 90, 0],
+          }}
+          transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+          className="absolute -top-1/2 -right-1/2 w-full h-full bg-white/5 rounded-full blur-3xl"
+        />
+        <motion.div
+          animate={{
+            scale: [1.2, 1, 1.2],
+            rotate: [0, -90, 0],
+          }}
+          transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+          className="absolute -bottom-1/2 -left-1/2 w-full h-full bg-white/5 rounded-full blur-3xl"
+        />
+      </div>
+
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+        className="w-full max-w-md relative z-10"
+      >
+        <Card variant="glass" className="backdrop-blur-xl bg-white/90 dark:bg-neutral-900/90 shadow-2xl border border-white/20">
+          {/* Logo and Header */}
+          <div className="text-center mb-8">
+            <motion.div
+              animate={{ rotate: [0, 5, -5, 0] }}
+              transition={{ duration: 2, repeat: Infinity }}
+              className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-br from-brand-500 to-accent-500 text-white text-2xl font-bold mb-4 shadow-lg"
+            >
+              <Sparkles size={32} />
+            </motion.div>
+            <h1 className="text-3xl font-display font-bold text-neutral-900 dark:text-neutral-100 mb-2">
+              SkillSwap
+            </h1>
+            <p className="text-neutral-600 dark:text-neutral-400">
+              Exchange skills, grow together
+            </p>
+          </div>
+
+          {/* Tab Switcher */}
+          <div className="flex gap-2 p-1 bg-neutral-100 dark:bg-neutral-800 rounded-xl mb-6">
+            <button
+              onClick={() => {
+                setIsRegistering(false);
+                setError('');
+              }}
+              className={`flex-1 py-2.5 rounded-lg font-medium transition-all ${
+                !isRegistering
+                  ? 'bg-white dark:bg-neutral-700 text-brand-600 dark:text-brand-400 shadow-md'
+                  : 'text-neutral-600 dark:text-neutral-400'
+              }`}
+            >
+              <div className="flex items-center justify-center gap-2">
+                <LogIn size={18} />
+                Sign In
+              </div>
+            </button>
+            <button
+              onClick={() => {
+                setIsRegistering(true);
+                setError('');
+              }}
+              className={`flex-1 py-2.5 rounded-lg font-medium transition-all ${
+                isRegistering
+                  ? 'bg-white dark:bg-neutral-700 text-brand-600 dark:text-brand-400 shadow-md'
+                  : 'text-neutral-600 dark:text-neutral-400'
+              }`}
+            >
+              <div className="flex items-center justify-center gap-2">
+                <UserPlus size={18} />
+                Register
+              </div>
+            </button>
+          </div>
+
+          {/* Error Message */}
+          <AnimatePresence>
+            {error && (
+              <motion.div
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -10 }}
+                className="mb-4 p-4 rounded-xl bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 flex items-start gap-3"
+              >
+                <AlertCircle size={20} className="text-red-600 dark:text-red-400 flex-shrink-0 mt-0.5" />
+                <p className="text-sm text-red-800 dark:text-red-300">{error}</p>
+              </motion.div>
+            )}
+          </AnimatePresence>
+
+          {/* Form */}
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <Input
               type="text"
               name="username"
               placeholder="Username"
               value={formData.username}
               onChange={handleInputChange}
               required
+              autoComplete="username"
             />
-          </div>
 
-          {isRegistering && (
-            <div className="form-group">
-              <input
-                type="email"
-                name="email"
-                placeholder="Email"
-                value={formData.email}
-                onChange={handleInputChange}
-                required
-              />
-            </div>
-          )}
+            <AnimatePresence>
+              {isRegistering && (
+                <motion.div
+                  initial={{ opacity: 0, height: 0 }}
+                  animate={{ opacity: 1, height: 'auto' }}
+                  exit={{ opacity: 0, height: 0 }}
+                >
+                  <Input
+                    type="email"
+                    name="email"
+                    placeholder="Email"
+                    value={formData.email}
+                    onChange={handleInputChange}
+                    required={isRegistering}
+                    autoComplete="email"
+                  />
+                </motion.div>
+              )}
+            </AnimatePresence>
 
-          <div className="form-group">
-            <input
+            <Input
               type="password"
               name="password"
               placeholder="Password"
               value={formData.password}
               onChange={handleInputChange}
               required
+              autoComplete={isRegistering ? 'new-password' : 'current-password'}
             />
-          </div>
 
-          <button type="submit" className="submit-btn" disabled={loading}>
-            {loading ? 'Please wait...' : (isRegistering ? 'Register' : 'Login')}
-          </button>
-        </form>
-
-        <div className="toggle-form">
-          <p>
-            {isRegistering ? 'Already have an account?' : "Don't have an account?"}
-            <button
-              type="button"
-              className="link-btn"
-              onClick={() => {
-                setIsRegistering(!isRegistering);
-                setError('');
-                setFormData({ username: '', email: '', password: '' });
-              }}
+            <Button
+              type="submit"
+              variant="primary"
+              size="lg"
+              disabled={loading}
+              loading={loading}
+              className="w-full"
             >
-              {isRegistering ? 'Sign In' : 'Register'}
-            </button>
-          </p>
-        </div>
+              {isRegistering ? 'Create Account' : 'Sign In'}
+            </Button>
+          </form>
 
-        {/* Demo credentials hint */}
-        <div className="demo-hint">
-          <p><small>Demo users: admin/admin, user1/password, user2/password</small></p>
-          <p><small style={{color: '#666', marginTop: '5px'}}>API: {API_URL}</small></p>
-        </div>
-      </div>
+          {/* Demo Credentials */}
+          {!isRegistering && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.3 }}
+              className="mt-6 pt-6 border-t border-neutral-200 dark:border-neutral-700"
+            >
+              <p className="text-sm text-neutral-600 dark:text-neutral-400 mb-3 text-center">
+                Quick demo access:
+              </p>
+              <div className="flex flex-wrap gap-2 justify-center">
+                <button
+                  type="button"
+                  onClick={() => fillDemoCredentials('admin', 'admin')}
+                  className="px-3 py-1.5 text-xs rounded-lg bg-neutral-100 dark:bg-neutral-800 hover:bg-neutral-200 dark:hover:bg-neutral-700 text-neutral-700 dark:text-neutral-300 transition-smooth"
+                >
+                  Admin
+                </button>
+                <button
+                  type="button"
+                  onClick={() => fillDemoCredentials('user1', 'password')}
+                  className="px-3 py-1.5 text-xs rounded-lg bg-neutral-100 dark:bg-neutral-800 hover:bg-neutral-200 dark:hover:bg-neutral-700 text-neutral-700 dark:text-neutral-300 transition-smooth"
+                >
+                  User1
+                </button>
+                <button
+                  type="button"
+                  onClick={() => fillDemoCredentials('user2', 'password')}
+                  className="px-3 py-1.5 text-xs rounded-lg bg-neutral-100 dark:bg-neutral-800 hover:bg-neutral-200 dark:hover:bg-neutral-700 text-neutral-700 dark:text-neutral-300 transition-smooth"
+                >
+                  User2
+                </button>
+              </div>
+              <p className="text-xs text-neutral-500 dark:text-neutral-500 mt-3 text-center">
+                API: {API_URL}
+              </p>
+            </motion.div>
+          )}
+        </Card>
+      </motion.div>
     </div>
   );
 }

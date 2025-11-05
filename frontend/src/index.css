@@ -1,0 +1,31 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-neutral-50 dark:bg-neutral-900 text-neutral-900 dark:text-neutral-50;
+    @apply font-sans antialiased;
+  }
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-display;
+  }
+}
+
+@layer utilities {
+  .text-gradient {
+    @apply bg-gradient-to-r from-brand-500 to-accent-500 bg-clip-text text-transparent;
+  }
+
+  .glass {
+    @apply bg-white/70 dark:bg-neutral-800/70 backdrop-blur-lg;
+  }
+
+  .neumorphic {
+    @apply bg-neutral-100 dark:bg-neutral-800 shadow-neumorphic;
+  }
+
+  .transition-smooth {
+    @apply transition-all duration-300 ease-out;
+  }
+}
